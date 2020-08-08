@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title>COVID Trends - Index Page</title>
+    <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
+    <link rel="stylesheet" href="style.css">
+    <!-- for local: <script src="vue.js"></script> -->
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <script src="https://unpkg.com/element-ui/lib/index.js"></script>
+  </head>
+  <body>
+    <div id="right-table">
+      <p style="font-size:x-large">Ranking List</p>
+      <template>
+        <el-table
+          :data="myTable"
+          max-height="250"
+          :default-sort = "{prop: 'infected', order: 'descending'}">
+          <el-table-column
+            prop="country"
+            label="国家"
+            width="100">
+          </el-table-column>
+          <el-table-column
+            prop="new"
+            label="新增病例"
+            width="100">
+          </el-table-column>
+          <el-table-column
+            prop="infected"
+            label="累计确诊"
+            width="100">
+          </el-table-column>
+        </el-table>
+      </template>
+    </div>
+    <script src="script.js"></script>
+  </body>
+</html>
