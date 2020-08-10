@@ -1,0 +1,28 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema",
+  "type": "object",
+  "properties": {
+    "DEBUG": {
+      "description": "Enable Debug Mode",
+      "default": true,
+      "type": "boolean"
+    },
+    "SECRET_KEY": {
+      "description": "Secret Key for Sessions",
+      "type": "string"
+    },
+    "SQLALCHEMY_TRACK_MODIFICATIONS":{
+      "description": "SQLAlchemy: Track Every Modifications in Memory",
+      "type": "boolean",
+      "default": false
+    },
+    "SQLALCHEMY_DATABASE_URI": {
+      "description": "SQLAlchemy: Database Connection URI",
+      "type": "string",
+      "examples": [
+        "mysql+pymysql://username:password@host:port/database?charset=utf8mb4"
+      ]
+    }
+  },
+  "required": ["DEBUG", "SECRET_KEY", "SQLALCHEMY_DATABASE_URI", "SQLALCHEMY_TRACK_MODIFICATIONS"]
+}

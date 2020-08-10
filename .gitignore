@@ -131,3 +131,6 @@ dmypy.json
 # PyCharm Stuffs
 /.idea/
 *.iml
+
+# Project Configurations
+app/config.json
