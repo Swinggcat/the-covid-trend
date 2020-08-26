@@ -1,4 +1,69 @@
-#right-table{
-    width: 20%;
-    float: right;
+#news {
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
+
+.el-header {
+  font-size: 12px;
+  font-weight: bold;
+  background-color: rgb(32, 83, 160);
+  text-decoration-color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+a.header {
+  text-decoration: none;
+}
+a.header:link {
+  color: white;
+}
+a.header:visited {
+  color: white;
+}
+a.header:hover {
+  color: rgb(143, 203, 255);
+}
+      
+#title {
+  margin: 15px 0 15px 0;
+  color: rgb(18, 41, 71);
+  text-shadow: 2px 2px 5px rgba(18, 41, 71, 0.8);
+  font-size: 40px;
+  text-align: center;
+  font-weight: bold;
+}
+
+.el-button {
+  background-color: rgb(32, 83, 160);
+}
+
+#filter {
+  width: 1200px;
+  margin: 0 auto;
+}
+
+.entry-container {
+  width: 1350px;
+  margin: 0 auto;
+}
+
+a.entry-url {
+  text-decoration: none;
+  font-weight: bold;
+}
+a.entry-url:link {
+  color: rgb(34, 74, 131);
+}
+a.entry-url:visited {
+  color: rgb(34, 74, 131);
+}
+a.entry-url:hover {
+  color: rgb(62, 121, 202);
+}
+
+/* p.entry-content {
+  decorate the contents here.
+} */
