@@ -1,6 +1,4 @@
 import requests
-import time
-import pandas as pd
 from parse import *
 from savedb import DbSaver
 
@@ -58,7 +56,6 @@ class Crawler:
         url_prefix = 'https://www.who.int'
         pages = ['', '/1', '/2', '/3', '/4', '/5', '/6', '/7', '/8', '/9', '/10']
         for i, page in enumerate(pages):
-            print('***** visiting page %s *****' % str(i + 1))
             response = self.session.get(self.url[2] + page)
             news_url_list = parse_news_index(response.text)
             for news_url in news_url_list:

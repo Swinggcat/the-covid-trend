@@ -4,10 +4,11 @@ import pymysql
 
 class DbSaver:
     def __init__(self):
+        psw = input('Please input the password: ')
         self.conn = pymysql.connect(
             host='104.199.180.9',
             user='root',
-            password='cda8ba88-f9e7-4303-9078-7cf2cefde5f3',
+            password=psw,
             database='covid',
             charset='utf8'
         )
@@ -23,8 +24,6 @@ class DbSaver:
         cur = self.conn.cursor()
         for country in country_list:
             name = country[0]
-            if name != 'China' and name != 'United States of America':
-                continue
             cur.execute(
                 "SELECT * FROM countries WHERE name = '%s';" % name
             )
