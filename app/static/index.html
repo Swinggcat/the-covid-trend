@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>The COVID Trends</title>
+  </head>
+  <link rel="stylesheet" href="./style.css" />
+  <script src="https://cdn.jsdelivr.net/npm/jquery@1.11.3/dist/jquery.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/echarts/dist/echarts.min.js?_v_=1595563414783"></script>
+  <script src="https://gallery.echartsjs.com/dep/echarts/map/js/china.js"></script>
+  <script src="https://gallery.echartsjs.com/dep/echarts/map/js/world.js"></script>
+  <body>
+    <div class="nav">
+      <ul>
+        <li><a href="#">Map</a></li>
+        <li><a href="/api/data/countries" target="_blank">Trend</a></li>
+        <li><a href="/api/news/all" target="_blank">News</a></li>
+      </ul>
+    </div>
+    <div class="rank">
+      <div class="title">
+        Rank List
+      </div>
+      <div class="header">
+        <div class="row">
+          <div>Global</div>
+          <div>
+            <span>21732</span>
+          </div>
+        </div>
+      </div>
+      <div class="content">
+        <div class="row">
+          <div>Global</div>
+          <div>21732</div>
+        </div>
+        <div class="row">
+          <div>Global</div>
+          <div>21732</div>
+        </div>
+      </div>
+    </div>
+    <div class="panel">
+      <div class="item">
+        <div class="smText">Yesterday <span>+16</span></div>
+        <h2>2313</h2>
+        <div class="bigText">
+          Current diagnosis
+        </div>
+      </div>
+      <div class="item">
+        <div class="smText">Yesterday <span>+16</span></div>
+        <h2 id="sum">2313</h2>
+        <div class="bigText">
+          Cumulative diagnosis
+        </div>
+      </div>
+    </div>
+    <div class="chart" id="chart"></div>
+    <div class="footer">
+      <a href="javascript:;" title="china">China</a>
+      <a href="javascript:;" title="world">World</a>
+      <a href="javascript:;" title="usa">USA</a>
+    </div>
+    <script src="./china.js"></script>
+    <script src="./word.js"></script>
+    <script src="./usa.js"></script>
+    <script src="./usaGeojson.js"></script>
+    <script src="./2En.js"></script>
+    <script src="./china2en.js"></script>
+    <script>
+      var conObj = {}
+      globalCountries.forEach(function (item) {
+        conObj[item.cn] = item.en
+      })
+      var myChart = echarts.init(document.getElementById('chart'))
+      //表格设定
+      loadingMap('world')
+      function loadingMap(name) {
+        // 从所有数据中筛选出当日最高的10个
+        let data
+        name == 'china' ? chinaData.newslist : worldData.newslist
+        switch (name) {
+          case 'china':
+            data = chinaData.newslist
+            break
+          case 'world':
+            data = worldData.newslist
+            break
+          case 'usa':
+            data = usaData.newslist
+            break
+        }
+        var res = []
+        var res1 = []
+        var res2 = []
+        for (var n = 0; n < data.length; n++) {
+          res.push({
+            name: name == 'world' ?  conObj[data[n].provinceName] : data[n].provinceShortName,
+            value: data[n].confirmedCount,
+          })
+        }
+        res
+          .sort(function (a, b) {
+            return b.value - a.value
+          })
+          .slice(0, 6)
+
+        res.sort(function (a, b) {
+          return a.value - b.value
+        })
+        var sum = 0
+        for (t = 0; t < 10; t++) {
+          res1[t] = res[res.length - 1 - t].name
+          res2[t] = res[res.length - 1 - t].value
+          sum += res2[t]
+        }
+        // $('.rank .content').html('')
+        $('#sum').text(sum)
+        $('.rank .header .row div:last-child span').text(sum)
+        var html = ''
+        res1.forEach(function (item, idx) {
+          html += `
+        <div class="row">
+          <div>${name === 'china' ? nameMap[item] : item}</div>
+          <div>
+            <span>${res2[idx]}</span>
+            <div class="progress-box">
+              <div class="progress" style="width:${parseInt((res2[idx] / sum) * 100)}%;"></div>
+            </div>
+          </div>
+        </div>
+        `
+        })
+        $('.rank .content').html(html)
+        var option = {
+          //时间轴
+          title: [
+            {
+              text: 'CovidMap',
+              textStyle: {
+                color: '#2D3E53',
+                fontSize: 40,
+              },
+              left: 'center',
+              top: 25,
+            },
+            // {
+            //   show: true,
+            //   text: '感染人数前十地区',
+            //   textStyle: {
+            //     color: '#2D3E53',
+            //     fontSize: 18,
+            //   },
+            //   right: '10%',
+            //   top: '15%',
+            // },
+          ],
+          tooltip: {
+            show: true,
+            formatter: function (params) {
+              return (name === 'china' ? nameMap[params.name] : params.name) + '：' + (params.value || 'unknown')
+            },
+          },
+          //热力地图的颜色和变化范围
+          visualMap: {
+            type: 'piecewise',
+            pieces: [
+              {
+                min: 100000,
+                color: 'rgba(40,69,120,1)',
+              },
+              {
+                min: 10000,
+                max: 100000,
+                color: 'rgba(45,95,140,1)', 
+              },
+              {
+                min: 1000,
+                max: 100000,
+                color: 'rgba(65,110,184,1)',
+              },
+              {
+                min: 100,
+                max: 1000,
+                color: 'rgba(120,156,209,1)',
+              },
+              {
+                min: 10,
+                max: 100,
+                color: 'rgba(166,188,220,1)',
+              },
+              {
+                min: 1,
+                max: 10,
+                color: 'rgba(200,212,235,1)',
+              },
+              {
+                value: 0,
+                color: 'rgba(235,238,250,1)',
+              },
+            ],
+            orient: 'vertical',
+            itemWidth: 25,
+            itemHeight: 15,
+            showLabel: true,
+            seriesIndex: [0],
+
+            textStyle: {
+              color: '#7B93A7',
+            },
+            bottom: '10%',
+            left: '5%',
+          },
+          //图的相对位置
+          grid: {
+            right: '5%',
+            top: '20%',
+            bottom: '10%',
+            width: '20%',
+          },
+          //右部柱状图的显示范围
+          // xAxis: {
+          //   type: 'log',
+          //   // min: 0,
+          //   // max: 300000,
+          //   show: false,
+          // },
+          // yAxis: [
+          //   {
+          //     inverse: true,
+          //     offset: '2',
+          //     type: 'category',
+          //     data: res1,
+          //     nameTextStyle: {
+          //       color: '#fff',
+          //     },
+          //     axisTick: {
+          //       show: false,
+          //     },
+          //     axisLabel: {
+          //       //rotate:45,
+          //       textStyle: {
+          //         fontSize: 14,
+          //         color: '#000000',
+          //       },
+          //       interval: 0,
+          //     },
+          //     axisLine: {
+          //       show: false,
+          //       lineStyle: {
+          //         color: '#333',
+          //       },
+          //     },
+          //     splitLine: {
+          //       show: false,
+          //       lineStyle: {
+          //         color: '#333',
+          //       },
+          //     },
+          //   },
+          // ],
+
+          geo: {
+            map: name,
+            right: 350 + (name == 'world' ? 0 : 70),
+            left: 250 + (name == 'world' ? 0 : 90),
+            top: 100,
+            bottom: 100,
+            label: {
+              emphasis: {
+                show: false,
+              },
+            },
+            itemStyle: {
+              normal: {
+                areaColor: '#EBEEFA',
+              },
+	emphasis: {
+                areaColor: '#87CEFA',
+              },
+            },
+          },
+          series: [
+            {
+              name: 'mapSer',
+              type: 'map',
+              map: name,
+              roam: false,
+              geoIndex: 0,
+              label: {
+                show: false,
+              },
+              data: res,
+            },
+            // {
+            //   name: '',
+            //   type: 'bar',
+            //   zlevel: 2,
+            //   barWidth: '40%',
+            //   label: {
+            //     normal: {
+            //       show: true,
+            //       fontSize: 14,
+            //       position: 'right',
+            //       formatter: '{c}',
+            //     },
+            //   },
+            //   data: res2,
+            //   itemStyle: {
+            //     normal: {
+            //       color: function (params) {
+            //         var colorList = ['#BB0000', '#C21A1A', '#C93333', '#CF4D4D', '#D66666', '#DD8080', '#E49999', '#EBB3B3', '#F1CCCC', '#F8E6E6']
+            //         return colorList[params.dataIndex]
+            //       },
+            //     },
+            //   },
+            // },
+          ],
+
+          animationDurationUpdate: 3000,
+          animationEasingUpdate: 'quinticInOut',
+        }
+        myChart.setOption(option, true)
+      }
+      $('.footer a').click(function () {
+        loadingMap($(this).attr('title'))
+      })
+    </script>
+  </body>
+</html>
