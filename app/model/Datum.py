@@ -18,3 +18,16 @@ class Datum(db.Model):
             self.id, self.province_id, self.source_id,
             self.date, self.infected, self.suspected, self.cured, self.died
         )
+
+    def json(self):
+        return {
+            "id": self.id,
+            "province_id": self.province_id,
+            "source_id": self.source_id,
+
+            "date": self.date,
+            "infected": self.infected,
+            "suspected": self.suspected,
+            "cured": self.cured,
+            "died": self.died,
+        }

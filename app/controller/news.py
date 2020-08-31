@@ -6,7 +6,7 @@ from flask import jsonify
 from datetime import datetime
 
 
-@app.route("/news/today")
+@app.route("/api/news/today")
 def page_news_today():
     news = News.query \
         .filter(News.date >= datetime.now().date()) \
@@ -15,7 +15,7 @@ def page_news_today():
     return jsonify([item.json() for item in news])
 
 
-@app.route("/news/all")
+@app.route("/api/news/all")
 def page_news_all():
     news = News.query\
         .order_by(News.date.desc())\

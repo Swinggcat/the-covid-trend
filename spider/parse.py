@@ -20,6 +20,7 @@ def to_pinyin(s: str) -> str:
 def parse_usa(text: str, state: str) -> tuple:
     """
     Get covid data of each states in USA
+    :param state: state
     :param text: text to be parsed
     :return: list of (state_name, confirmed, suspected, cured, dead)
     """
