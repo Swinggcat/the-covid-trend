@@ -11,3 +11,10 @@ class Province(db.Model):
 
     def __repr__(self):
         return '<Province#{}:"{}" of Country#{}>'.format(self.id, self.name, self.country_id)
+
+    def json(self):
+        return {
+            "id": self.id,
+            "country_id": self.country_id,
+            "name": self.name
+        }
